@@ -1,10 +1,14 @@
 package numerical
 
 // Gradient returns the numerical gradient of f at x.
-func Gradient[T float32 | float64](f func(x ...T) T, x []T, h T) []T {
-	grad := make([]T, len(x))
+func Gradient[T float32 | float64](
+	f func(x ...T) T,
+	x []T,
+	h T,
+) []T {
 	xh := append([]T(nil), x...)
 
+	grads := make([]T, len(x))
 	for i := range x {
 		xi := x[i]
 
@@ -16,12 +20,12 @@ func Gradient[T float32 | float64](f func(x ...T) T, x []T, h T) []T {
 		xh[i] = xi - h
 		fxh2 := f(xh...)
 
-		// grad
-		grad[i] = (fxh1 - fxh2) / (2 * h)
+		// grads
+		grads[i] = (fxh1 - fxh2) / (2 * h)
 
 		// revert
 		xh[i] = xi
 	}
 
-	return grad
+	return grads
 }
